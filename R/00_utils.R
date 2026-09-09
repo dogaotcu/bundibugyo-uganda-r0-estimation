@@ -3,9 +3,6 @@
 ##
 ## Shared setup, publication theme, and bootstrap/confidence-band helpers
 ## used by both Model A (R/01_model_A.R) and Model B (R/02_model_B.R).
-##
-## These functions were previously duplicated verbatim in both model
-## scripts; they are defined once here and sourced by everything else.
 ###############################################################################
 
 # --------------------------------------------------------------------------
@@ -41,12 +38,10 @@ if (packageVersion("ggplot2") < package_version("3.5.0")) {
   stop("ggplot2 >= 3.5.0 is required. Run install.packages('ggplot2').")
 }
 
-# --------------------------------------------------------------------------
-# Shared study constants (Table 1 of the manuscript)
-# --------------------------------------------------------------------------
-START_DATE      <- as.Date("2026-05-15")  # day 1 of the observation period
-POPULATION      <- 48656601               # DRC population (UN WPP)
-Q_DETECTION     <- 1.0                    # probability of detection after import
+
+START_DATE      <- as.Date("2026-05-15")   # day 1 of the observation period
+POPULATION      <- 48656601                # DRC population (UN WPP)
+Q_DETECTION     <- 1.0                     # probability of detection after import
 ANNUAL_TRAVELERS <- 2160000                # DRC -> Uganda, mobility dataset
 DAILY_TRAVELERS  <- ANNUAL_TRAVELERS / 365 # ~5,918 travelers/day
 
@@ -92,9 +87,6 @@ theme_publication <- theme_classic(base_size = 20, base_family = "Arial") +
     strip.text    = element_text(color = "black", face = "bold", size = 18)
   )
 
-# --------------------------------------------------------------------------
-# Load the observed imported-case time series (single source of truth)
-# --------------------------------------------------------------------------
 load_observed_cases <- function(path = "data/imported_cases_uganda.csv") {
   observed <- read.csv(path, stringsAsFactors = FALSE)
   observed$date <- as.Date(observed$date)
@@ -127,20 +119,7 @@ calculate_R0 <- function(r, GI_mean = GI_MEAN, GI_sd = GI_SD) {
 
 # --------------------------------------------------------------------------
 # Parametric-bootstrap confidence-band construction
-#
-# Shared by Model A and Model B. Both models:
-#   1. Simulate Y_t^(b) ~ Poisson(mu_hat_t) from the fitted mean curve
-#   2. Refit the model to each bootstrap replicate, keeping the joint
-#      (i0, r) pair
-#   3. Reconstruct one fitted mean curve per successful bootstrap replicate
-#   4. Sample those curves and draw a final Poisson count trajectory from
-#      each, to add measurement/sampling variation on top of parameter
-#      uncertainty
-#   5. Build a *simultaneous* 95% band from the standardized maximum
-#      absolute deviation over the fitted period
 # --------------------------------------------------------------------------
-
-#' Generate one Poisson count trajectory per sampled bootstrap mean curve.
 generate_poisson_confidence_trajectories <- function(bootstrap_mean_matrix,
                                                        n_simulation, seed) {
   bootstrap_mean_matrix <- as.matrix(bootstrap_mean_matrix)
@@ -169,8 +148,7 @@ generate_poisson_confidence_trajectories <- function(bootstrap_mean_matrix,
        sampled_curve_index = sampled_curve_index)
 }
 
-#' Simultaneous 95% confidence band from the standardized maximum absolute
-#' deviation of bootstrap trajectories around the fitted mean curve.
+#' 95% confidence band 
 calculate_simultaneous_confidence_band <- function(fitted_mean, bootstrap_mean_matrix,
                                                      level = SIMULTANEOUS_CI_LEVEL) {
   fitted_mean <- as.numeric(fitted_mean)
