@@ -14,7 +14,7 @@
 message(">> Fitting Model A (pre-closure exponential-growth model)...")
 source("R/01_model_A.R")
 
-message(">> Fitting Model B (hybrid traveler / border-closure model)...")
+message(">> Fitting Model B (full trajectory / border-closure model)...")
 source("R/02_model_B.R")
 
 message(">> Building Figure 1 (epidemic curve and map)...")
