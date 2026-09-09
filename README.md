@@ -1,4 +1,4 @@
-# Transmissibility of the 2026 Bundibugyo Virus Disease Epidemic, Estimated from Imported Cases in Uganda
+# Estimating the reproduction number of Bundibugyo virus from imported cases in Uganda
 
 This repository contains the data and R code used to estimate the basic
 reproduction number (R0) of the 2026 Bundibugyo virus disease epidemic in
@@ -33,7 +33,7 @@ parametric bootstrap (1,000 replications).
 │   ├── 05_figure3_r0_sensitivity.R # Figure 3: R0 vs assumed end date / closure date
 │   ├── 06_figure4_GI_sensitivity.R # Figure 4: R0 sensitivity to generation-time assumptions
 │   └── run_all.R                   # master script: reproduces everything, in order
-└── output/                         # created on first run; all figures and .rds results
+└── output/                         # all figures and .rds results
 ```
 
 `R/00_utils.R` holds every function shared by both models (the publication
@@ -88,16 +88,11 @@ their assumptions change.
 E[c_t] = N/(m*q) * i0 * exp(r*t),   c_t ~ Poisson(E[c_t])
 ```
 
-For a given `r`, the conditional MLE of `i0` is available in closed form,
-so only `r` is optimized numerically (profile likelihood).
-
 **Model B** (whole-period, border closure + incubation delay):
 
 ```
 E[c_t] = N/(m*q) * i0 * exp(r*t)                                  for t < t1
-E[c_t] = convolution of the residual pre-closure exponential curve
-         and the reduced post-closure passage with the incubation
-         period distribution                                       for t >= t1
+E[c_t ]= ∫_0^(t_1)(〖N/mq i_0  e^r(t_1-s)  f((t-t_1 )+s)ds 〗+ (1-ζ) ∫_(t_1)^t〖N/mq i_0  e^ru f(t-u)du〗                                      for t >= t1
 ```
 
 `log(i0)` and `r` are estimated jointly by maximum likelihood (no closed
