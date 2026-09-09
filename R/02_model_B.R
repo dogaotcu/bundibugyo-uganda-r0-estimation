@@ -1,7 +1,7 @@
 ###############################################################################
 ## 02_model_B.R
 ##
-## Model B: whole-period hybrid traveler / border-closure model
+## Model B: whole-period / border-closure model
 ## (Equations 2-3 in the manuscript). Before closure (t < t1), imported
 ## incidence follows the same exponential-growth traveler model as Model A.
 ## From closure day t1 onward, expected incidence is a mixture of:
@@ -40,11 +40,7 @@ N_DAYS <- nrow(observed)
 OBS_TIME <- observed$day - 1L
 TRAVELER_FRACTION <- DAILY_TRAVELERS / (POPULATION * Q_DETECTION)
 
-# --------------------------------------------------------------------------
-# Expected-case basis for i0 = 1 (Eq. 2-3): a mixture of the residual
-# pre-closure exponential curve and the reduced post-closure passage,
-# convolved with the incubation-period distribution.
-# --------------------------------------------------------------------------
+
 calculate_hybrid_basis <- function(r, closure_day) {
   if (length(r) != 1L || !is.finite(r) || r <= R_LOWER || r > R_UPPER) return(NULL)
   if (length(closure_day) != 1L || !is.finite(closure_day) ||
@@ -198,8 +194,7 @@ fit_original_joint_model <- function(y, closure_day) {
 }
 
 # --------------------------------------------------------------------------
-# Parametric bootstrap: refit the full (log_i0, r) pair to each replicate,
-# with a few perturbed retry starts if the first attempt fails to converge
+# Parametric bootstrap:
 # --------------------------------------------------------------------------
 BOOTSTRAP_RETRY_STARTS <- 3L
 
