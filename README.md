@@ -92,8 +92,9 @@ E[c_t] = N/(m*q) * i0 * exp(r*t),   c_t ~ Poisson(E[c_t])
 
 ```
 E[c_t] = N/(m*q) * i0 * exp(r*t)                                  for t < t1
-E[c_t ]= ∫_0^(t_1)(〖N/mq i_0  e^r(t_1-s)  f((t-t_1 )+s)ds 〗+ (1-ζ) ∫_(t_1)^t〖N/mq i_0  e^ru f(t-u)du〗                                      for t >= t1
+E[c_t ]= ∫_0^(t_1)〖N/mq i_0  e^r(t_1-s)  f((t-t_1 )+s)ds 〗+ (1-ζ) ∫_(t_1)^t〖N/mq i_0  e^ru f(t-u)du〗                                      for t >= t1
 ```
+![Uploading image.png…]()
 
 `log(i0)` and `r` are estimated jointly by maximum likelihood (no closed
 form is available once the incubation convolution is introduced).
