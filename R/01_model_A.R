@@ -7,9 +7,6 @@
 ##   E[c_t] = (N / (m*q)) * i0 * exp(r*t)
 ##   c_t ~ Poisson(E[c_t])
 ##
-## For any candidate r, the conditional MLE of i0 is available in closed
-## form, so only r is optimized numerically (profile likelihood). 95% CIs
-## and simultaneous confidence bands are obtained by parametric bootstrap.
 ##
 ## Fitted for three alternative analysis end days (22, 23, 24 -> 5, 6,
 ## 7 June 2026) to produce the Figure 3A end-date sensitivity panel; the
@@ -24,9 +21,7 @@ MAIN_END_DAY <- 23L            # headline result reported in the abstract
 observed <- load_observed_cases()
 if (max(END_DAYS) > nrow(observed)) stop("END_DAYS exceeds the available data.")
 
-# --------------------------------------------------------------------------
-# Build the analysis data frame truncated at a given end day
-# --------------------------------------------------------------------------
+
 make_analysis_data <- function(end_day) {
   d <- observed[seq_len(end_day), ]
   data.frame(
@@ -38,9 +33,7 @@ make_analysis_data <- function(end_day) {
   )
 }
 
-# --------------------------------------------------------------------------
-# Profile likelihood: for a given r, i0 has a closed-form conditional MLE
-# --------------------------------------------------------------------------
+
 calculate_profile_values <- function(r, data) {
   if (length(r) != 1L || !is.finite(r)) return(NULL)
 
